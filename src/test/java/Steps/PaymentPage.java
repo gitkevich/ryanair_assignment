@@ -2,6 +2,10 @@ package Steps;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.junit.Assert.assertTrue;
 
 public class PaymentPage {
 
@@ -12,6 +16,8 @@ public class PaymentPage {
     }
 
     public void enterPhoneNumber() {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("contact-details")));
         driver.findElement(By.xpath("//button/div")).click();
         driver.findElement(By.xpath("//ry-dropdown-item[156]/button/div/div")).click();
         driver.findElement(By.name("undefined")).click();
@@ -51,7 +57,7 @@ public class PaymentPage {
     public void fillAddressFields() {
         driver.findElement(By.xpath("(//input[@name='undefined'])[5]")).click();
         driver.findElement(By.xpath("(//input[@name='undefined'])[5]")).clear();
-        driver.findElement(By.xpath("(//input[@name='undefined'])[5]")).sendKeys("ul.Potlicka 20F/5");
+        driver.findElement(By.xpath("(//input[@name='undefined'])[5]")).sendKeys("ul.Potulicka 20F/5");
         driver.findElement(By.xpath("(//input[@name='undefined'])[7]")).click();
         driver.findElement(By.xpath("(//input[@name='undefined'])[7]")).clear();
         driver.findElement(By.xpath("(//input[@name='undefined'])[7]")).sendKeys("Szczecin");
@@ -68,10 +74,21 @@ public class PaymentPage {
     }
 
     public void confirmTermsAndConditions() {
-        driver.findElement(By.xpath("//div[2]/ry-checkbox/label/div/div")).click();
+        driver.findElement(By.xpath("//terms-and-conditions/div/div/ry-checkbox/label/div/div")).click();
     }
 
     public void clickPay() {
         driver.findElement(By.xpath("//pay-button/div/button")).click();
+    }
+
+    public void waitUntilPaymentErrorIsDisplayed() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".payment-methods-error")));
+    }
+
+    public void verifyErrorText() {
+        String message = driver.findElement(By.cssSelector(".payment-methods-error")).getText();
+        assertTrue(message.contains("Transaction could not be processed. Your payment was not authorised therefore we could not complete your booking. Please ensure that the information was correct and try again or use a new payment card."));
+
     }
 }

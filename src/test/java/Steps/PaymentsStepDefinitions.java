@@ -1,10 +1,16 @@
 package Steps;
 
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.assertTrue;
 
 public class PaymentsStepDefinitions {
@@ -13,15 +19,30 @@ public class PaymentsStepDefinitions {
     private BookingDetailsFlow bookingDetailsFlow;
     private PaymentPage paymentPage;
 
-    @Given("User makes a booking from “DUB” to “SXF” on 12/03/2020 for 2 adults and 1 child")
-    public void userMakesABooking() {
+    @Before
+    public void setUp()
+    {
+        driver = new FirefoxDriver();
+        homePage = new HomePage(driver);
+        bookingDetailsFlow = new BookingDetailsFlow(driver);
+        paymentPage = new PaymentPage(driver);
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+
+        homePage.open();
+        homePage.clickLogin();
+        homePage.enterEmail("ryanairtester1234@gmail.com");
+        homePage.enterPassword("Ryanair12");
+        homePage.submitLogin();
+    }
+
+    @Given("User makes a booking")
+    public void user_makes_a_booking() {
         homePage.clickDeparture();
         homePage.chooseDUB();
         homePage.clickDestination();
         homePage.chooseSXF();
         homePage.chooseOneway();
         homePage.clickDepartDate();
-        homePage.chooseDate12032020();
         homePage.increaseAdultsCount();
         homePage.increaseChildrenCount();
         homePage.clickSearch();
@@ -33,16 +54,14 @@ public class PaymentsStepDefinitions {
         homePage.clickContinueBooking();
         bookingDetailsFlow.closeFamilySeatingPopup();
         bookingDetailsFlow.addSeats();
-        bookingDetailsFlow.finishChoosingSeats();
         bookingDetailsFlow.addCabinBags();
-        bookingDetailsFlow.finishChoosingBags();
-        bookingDetailsFlow.clickContinue(); //skipping "Anything else?" screen
+        bookingDetailsFlow.skipAnythingElseScreen();
         bookingDetailsFlow.viewBasket();
         bookingDetailsFlow.clickCheckout();
     }
 
-    @When("I pay for booking with card details “5555 5555 5555 5557”, “10/20” and “265”")
-    public void userPaysForBooking() {
+    @When("User pays for booking with invalid card details")
+    public void user_pays_for_booking_with_invalid_card_details() {
         paymentPage.enterPhoneNumber();
         paymentPage.chooseNoInsurance();
         paymentPage.enterCardNumber();
@@ -55,9 +74,18 @@ public class PaymentsStepDefinitions {
         paymentPage.clickPay();
     }
 
-    @Then("I should get payment declined message \"Transaction could not be processed. Your payment was not authorised therefore we could not complete your booking. Please ensure that the information was correct and try again or use a new payment card.")
-    public void iShouldGetPaymentDeclinedMessage() {
+    @Then("User should get payment declined message")
+    public void user_should_get_payment_declined_message() {
+
+        paymentPage.waitUntilPaymentErrorIsDisplayed();
+        paymentPage.verifyErrorText();
         String message = driver.findElement(By.xpath("/html/body/app-root/ng-component/ry-spinner/div/payment-form/form/div[5]/payment-methods/div/div/div/ry-alert/div/div/div")).getText();
         assertTrue(message.contains("Transaction could not be processed. Your payment was not authorised therefore we could not complete your booking. Please ensure that the information was correct and try again or use a new payment card."));
+    }
+
+    @After
+    public void tearDown()
+    {
+        driver.quit();
     }
 }

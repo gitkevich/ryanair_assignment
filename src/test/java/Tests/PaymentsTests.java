@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/java/Features",
-        glue = "src/test/java/Steps",
+        glue = {"Steps"},
         monochrome = true
 )
 public class PaymentsTests {

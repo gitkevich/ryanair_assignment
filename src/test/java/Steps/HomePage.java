@@ -3,40 +3,63 @@ package Steps;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage {
     WebDriver driver;
 
-    HomePage(WebDriver driver){
-        this.driver = driver;
-    }
+    HomePage(WebDriver driver){ this.driver = driver; }
+
+//    By elementPath = By.xpath("xzy");
+//    By logInSignUpFormPath = By.tagName("ry-form");
+ //   WebElement logInSignUpForm = driver.findElement(logInSignUpFormPath);
 
     void open() {
         driver.get("https://www.ryanair.com/ie/en");
+        driver.findElement(By.id("glyphs.close")).click(); // closing cookies popup
     }
 
     void clickLogin() {
-        driver.findElement(By.xpath("//hp-header-menu-item[3]/button/span")).click();
+        driver.findElement(By.xpath("//hp-header-menu-item[4]/button/span")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("ry-form")));
     }
 
     void enterEmail(String email){
-        driver.findElement(By.name("email")).click();
-        driver.findElement(By.name("email")).clear();
-        driver.findElement(By.name("email")).sendKeys(email);
+        WebElement emailInput = driver.findElement(By.xpath("//input[@name='email']"));
+        emailInput.click();
+        emailInput.clear();
+        emailInput.sendKeys(email);
     }
 
     void enterPassword(String password){
-        driver.findElement(By.name("password")).clear();
-        driver.findElement(By.name("password")).sendKeys(password);
-        driver.findElement(By.name("password")).sendKeys(Keys.ENTER);
+        WebElement passwordInput = driver.findElement(By.xpath("//div[2]/ry-input/label/span[2]/input"));
+        passwordInput.click();
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
+    }
+
+    void submitLogin(){
+        WebElement ryForm = driver.findElement(By.tagName("ry-form"));
+        WebElement form = ryForm.findElement(By.tagName("form"));
+        form.submit();
     }
 
     public void clickDeparture() {
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.tagName("ry-form")));
         driver.findElement(By.id("input-button__departure")).click();
     }
 
     public void chooseDUB() {
-        driver.findElement(By.xpath("//ry-tooltip[@id='ry-tooltip-1']/div[2]/hp-lazy-controls-tooltips/hp-app-controls-tooltips/hp-controls-tooltips-container/hp-controls-tooltips/hp-origin-container/hp-airports/hp-airports-list/div[2]/div/hp-airport-item/span/span")).click();
+
+        driver.findElement(By.id("input-button__departure")).clear();
+        driver.findElement(By.id("input-button__departure")).sendKeys("Dublin");
+
     }
 
     public void clickDestination() {
@@ -44,44 +67,45 @@ public class HomePage {
     }
 
     public void chooseSXF() {
-        driver.findElement(By.xpath("//ry-tooltip[@id='ry-tooltip-2']/div[2]/hp-lazy-controls-tooltips/hp-app-controls-tooltips/hp-controls-tooltips-container/hp-controls-tooltips/hp-destination-container/hp-airports/hp-airports-list/div[2]/div/hp-airport-item/span/span")).click();
-    }
+        driver.findElement(By.id("input-button__destination")).clear();
+        driver.findElement(By.id("input-button__destination")).sendKeys("Berlin Schönefeld");    }
 
     public void chooseOneway() {
         driver.findElement(By.xpath("//hp-trip-type-button[2]/button/label")).click();
     }
 
     public void clickDepartDate() {
-        driver.findElement(By.xpath("//hp-input-button/div/div[2]")).click();
-    }
-
-    public void chooseDate12032020() {
-        driver.findElement(By.xpath("//ry-tooltip[@id='ry-tooltip-3']/div[2]/hp-lazy-controls-tooltips/hp-app-controls-tooltips/hp-controls-tooltips-container/hp-controls-tooltips/hp-datepicker-container/hp-datepicker/ry-datepicker-desktop/div/calendar[2]/calendar-body/div[4]/div[10]/div")).click();
+        driver.findElement(By.xpath("//div[@data-id='2020-03-12']")).click();
     }
 
     public void increaseAdultsCount() {
-        driver.findElement(By.xpath("//ry-tooltip[@id='ry-tooltip-4']/div[2]/hp-lazy-controls-tooltips/hp-app-controls-tooltips/hp-controls-tooltips-container/hp-controls-tooltips/hp-passengers-container/hp-passengers/hp-passengers-picker/ry-counter/div[2]/div[3]")).click();
+      driver.findElement(By.xpath("//ry-counter/div[2]/div[3]")).click();
     }
 
     public void increaseChildrenCount() {
-        driver.findElement(By.xpath("//ry-tooltip[@id='ry-tooltip-4']/div[2]/hp-lazy-controls-tooltips/hp-app-controls-tooltips/hp-controls-tooltips-container/hp-controls-tooltips/hp-passengers-container/hp-passengers/hp-passengers-picker/ry-counter[3]/div[2]/div[3]")).click();
+        driver.findElement(By.xpath("//ry-counter[3]/div[2]/div[3]")).click();
     }
 
     public void clickSearch() {
-        driver.findElement(By.xpath("//div/button")).click();
+        driver.findElement(By.tagName("ry-spinner")).click();
     }
 
     public void pickFlightCard() {
-        driver.findElement(By.xpath("//div/div/div/div")).click();
+        driver.findElement(By.xpath("//flight-info")).click();
     }
 
     public void pickFareCard() {
-        driver.findElement(By.xpath("//fare-card/div/div/button")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//fare-card")));
+        driver.findElement(By.xpath("//fare-card")).click();
     }
 
     public void fillAdult1Details() {
-        driver.findElement(By.cssSelector("icon.dropdown__toggle-chevron > span._container.icon-14 > svg")).click();
-        driver.findElement(By.xpath("//ry-dropdown[@id='title-0-error-message']/div[2]/div/div/ry-dropdown-item/button/div/div")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("passenger")));
+
+        driver.findElement(By.xpath("//button[@type='button']")).click();
+        driver.findElement(By.xpath("//ry-dropdown-item/button/div/div")).click();
         driver.findElement(By.id("formState.passengers.ADT-0.name")).click();
         driver.findElement(By.id("formState.passengers.ADT-0.name")).clear();
         driver.findElement(By.id("formState.passengers.ADT-0.name")).sendKeys("Michael");
@@ -90,8 +114,8 @@ public class HomePage {
     }
 
     public void fillAdult2Details() {
-        driver.findElement(By.cssSelector("#title-0-error-message > div.dropdown.b2 > button.dropdown__toggle.b2 > icon.dropdown__toggle-chevron > span._container.icon-14 > svg > path")).click();
-        driver.findElement(By.xpath("//ry-dropdown[@id='title-0-error-message']/div[2]/div/div/ry-dropdown-item[2]/button/div/div[2]")).click();
+        driver.findElement(By.xpath("//ry-dropdown[@id='title-0-error-message']/div[2]/button/icon")).click();
+        driver.findElement(By.xpath("//ry-dropdown[@id='title-0-error-message']/div[2]/div/div/ry-dropdown-item[2]/button/div/div")).click();
         driver.findElement(By.id("formState.passengers.ADT-1.name")).click();
         driver.findElement(By.id("formState.passengers.ADT-1.name")).clear();
         driver.findElement(By.id("formState.passengers.ADT-1.name")).sendKeys("Nancy");
