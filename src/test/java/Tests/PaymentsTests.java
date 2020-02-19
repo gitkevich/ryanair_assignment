@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/java/Features",
         glue = {"Steps"},
+        plugin = {"pretty", "html:target/cucumber-reports"},
         monochrome = true
 )
 public class PaymentsTests {

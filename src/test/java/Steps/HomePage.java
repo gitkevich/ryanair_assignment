@@ -1,11 +1,9 @@
 package Steps;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage {
@@ -13,13 +11,12 @@ public class HomePage {
 
     HomePage(WebDriver driver){ this.driver = driver; }
 
-//    By elementPath = By.xpath("xzy");
-//    By logInSignUpFormPath = By.tagName("ry-form");
- //   WebElement logInSignUpForm = driver.findElement(logInSignUpFormPath);
-
     void open() {
         driver.get("https://www.ryanair.com/ie/en");
-        driver.findElement(By.id("glyphs.close")).click(); // closing cookies popup
+    }
+
+    void closeCookiesPopup(){
+        driver.findElement(By.id("glyphs.close")).click();
     }
 
     void clickLogin() {

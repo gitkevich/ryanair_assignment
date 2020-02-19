@@ -5,13 +5,10 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
 
 public class PaymentsStepDefinitions {
     private WebDriver driver;
@@ -23,12 +20,14 @@ public class PaymentsStepDefinitions {
     public void setUp()
     {
         driver = new FirefoxDriver();
+        driver.manage().window().maximize();
         homePage = new HomePage(driver);
         bookingDetailsFlow = new BookingDetailsFlow(driver);
         paymentPage = new PaymentPage(driver);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
         homePage.open();
+        homePage.closeCookiesPopup();
         homePage.clickLogin();
         homePage.enterEmail("ryanairtester1234@gmail.com");
         homePage.enterPassword("Ryanair12");
@@ -76,12 +75,9 @@ public class PaymentsStepDefinitions {
 
     @Then("User should get payment declined message")
     public void user_should_get_payment_declined_message() {
-
         paymentPage.waitUntilPaymentErrorIsDisplayed();
         paymentPage.verifyErrorText();
-        String message = driver.findElement(By.xpath("/html/body/app-root/ng-component/ry-spinner/div/payment-form/form/div[5]/payment-methods/div/div/div/ry-alert/div/div/div")).getText();
-        assertTrue(message.contains("Transaction could not be processed. Your payment was not authorised therefore we could not complete your booking. Please ensure that the information was correct and try again or use a new payment card."));
-    }
+   }
 
     @After
     public void tearDown()
