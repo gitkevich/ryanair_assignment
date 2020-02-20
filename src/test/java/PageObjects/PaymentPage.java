@@ -1,4 +1,4 @@
-package Steps;
+package PageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +11,7 @@ public class PaymentPage {
 
     WebDriver driver;
 
-    PaymentPage(WebDriver driver){
+    public PaymentPage(WebDriver driver){
         this.driver = driver;
     }
 
@@ -82,7 +82,7 @@ public class PaymentPage {
     }
 
     public void waitUntilPaymentErrorIsDisplayed() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".payment-methods-error")));
     }
 

@@ -1,4 +1,4 @@
-package Steps;
+package PageObjects;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,11 +10,13 @@ public class BookingDetailsFlow {
 
     WebDriver driver;
 
-    BookingDetailsFlow(WebDriver driver){
+
+
+    public BookingDetailsFlow(WebDriver driver){
         this.driver = driver;
     }
 
-    void closeFamilySeatingPopup() {
+    public void closeFamilySeatingPopup() {
         WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[2]/div[2]/button")));
         driver.findElement(By.xpath("//div[2]/div[2]/button")).click();

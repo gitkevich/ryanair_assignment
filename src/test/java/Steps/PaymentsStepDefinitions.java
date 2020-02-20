@@ -1,12 +1,18 @@
 package Steps;
 
+import PageObjects.BookingDetailsFlow;
+import PageObjects.HomePage;
+import PageObjects.PaymentPage;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -21,12 +27,21 @@ public class PaymentsStepDefinitions {
     {
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
-        homePage = new HomePage(driver);
+
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        homePage = new HomePage(driver, wait);
         bookingDetailsFlow = new BookingDetailsFlow(driver);
         paymentPage = new PaymentPage(driver);
+
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
-        homePage.open();
+
+
+    }
+
+    @Given("User is logged in")
+    public void user_is_logged_in() {
         homePage.closeCookiesPopup();
         homePage.clickLogin();
         homePage.enterEmail("ryanairtester1234@gmail.com");
@@ -34,14 +49,12 @@ public class PaymentsStepDefinitions {
         homePage.submitLogin();
     }
 
-    @Given("User makes a booking")
+    @And("User makes a booking")
     public void user_makes_a_booking() {
-        homePage.clickDeparture();
-        homePage.chooseDUB();
-        homePage.clickDestination();
-        homePage.chooseSXF();
+        homePage.chooseDeparture("Dublin");
+        homePage.chooseDestination("Berlin Schönefeld");
         homePage.chooseOneway();
-        homePage.clickDepartDate();
+        homePage.chooseDepartDate();
         homePage.increaseAdultsCount();
         homePage.increaseChildrenCount();
         homePage.clickSearch();
